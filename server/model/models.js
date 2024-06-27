@@ -23,7 +23,16 @@ const User = sequelize.define('user', {
     },
     avatar: {
         type:DataTypes.STRING,
-    }
+    },
+    name: {
+        type:DataTypes.STRING,
+    },
+    surname: {
+        type:DataTypes.STRING,
+    },
+    about: {
+        type:DataTypes.STRING,
+    },
 }, {
     deletedAt: 'deleted_at',
     paranoid: true,
@@ -100,6 +109,23 @@ const Friend = sequelize.define('friend', {
 
 });
 
+const ResetToken = sequelize.define('reset_token', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    token: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    expires: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+});
+
 
 User.belongsTo(Role);
 Role.hasMany(User);
@@ -119,6 +145,9 @@ Follower.belongsTo(Promise);
 Friend.belongsTo(User);
 Friend.belongsTo(User, { as: 'friend', through: Friend});
 
+ResetToken.belongsTo(User);
+User.hasOne(ResetToken);
+
 module.exports = {
     User,
     Role,
@@ -126,5 +155,6 @@ module.exports = {
     Comment,
     Notification,
     Follower,
-    Friend
+    Friend,
+    ResetToken
 };

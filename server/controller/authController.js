@@ -1,10 +1,13 @@
-const {User, Role} = require("../model/models");
+const {User, Role, ResetToken} = require("../model/models");
 const { Op } = require("sequelize");
 const ApiError = require('../error/apiError');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
 
-class UserController {
+const sendResetEmail = require('../mailer/mailer');
+
+class AuthController {
     async registration(req, res, next) {
         try{
             let {username, email, password, confirmPassword} = req.body
@@ -40,7 +43,10 @@ class UserController {
             const hashPassword = await bcrypt.hash(password, 10)
             const user = await User.create({username, email, password: hashPassword, roleId})
             const token = generateJWT(user.id, user.username, user.email, await getRoleName(user.roleId))
-            req.session.token = token;
+            res.cookie('jwt', token, {
+                maxAge: 86400000,
+                httpOnly: true,
+            });
             return res.status(200).json({token});
 
         } catch (e) {
@@ -74,10 +80,56 @@ class UserController {
             }
 
             const token = generateJWT(user.id, user.username, user.email, await getRoleName(user.roleId))
-            req.session.token = token;
+            res.cookie('jwt', token, {
+                maxAge: 86400000,
+                httpOnly: true,
+            });
             return res.status(200).json({token});
         } catch (e) {
             next(ApiError.internal("Logging in error"))
+        }
+    }
+
+    async forgotPassword(req, res, next) {
+        const { email } = req.body;
+        try {
+            const user = await User.findOne({ where: { email } });
+
+            if (!user) {
+                return next(ApiError.notFound("User not found"));
+            }
+
+            const token = uuidv4()
+            const expires = Date.now() + 3600000;
+
+            let resetToken = await ResetToken.findOne({ where: { userId: user.id } });
+
+            if (resetToken) {
+                resetToken.token = token;
+                resetToken.expires = expires;
+                await resetToken.save();
+            } else {
+                await ResetToken.create({
+                    token: token,
+                    expires: expires,
+                    userId: user.id
+                });
+            }
+
+            await sendResetEmail(email, token);
+
+            res.status(200).json({ message: 'Password reset link sent to your email' });
+        } catch (error) {
+            next(ApiError.internal("Resetting error"))
+        }
+    }
+
+    async resetPassword(req, res, next) {
+        try {
+
+            res.status(200).json({ message: 'Password reset link sent to your email' });
+        } catch (error) {
+            next(ApiError.internal("Resetting error"))
         }
     }
 }
@@ -103,4 +155,4 @@ const getRoleName = async (roleId, next) => {
     }
 };
 
-module.exports = new UserController();
+module.exports = new AuthController();
