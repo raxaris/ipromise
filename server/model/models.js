@@ -19,19 +19,33 @@ const User = sequelize.define('user', {
     },
     password: {
         type:DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     avatar: {
         type:DataTypes.STRING,
+        allowNull: true
     },
     name: {
         type:DataTypes.STRING,
+        allowNull: true
     },
     surname: {
         type:DataTypes.STRING,
+        allowNull: true
     },
     about: {
         type:DataTypes.STRING,
+        allowNull: true
+    },
+    googleId: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: true
+    },
+    facebookId: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: true
     },
 }, {
     deletedAt: 'deleted_at',
@@ -64,6 +78,12 @@ const Promise = sequelize.define('promise', {
     deadline: {
         type: DataTypes.DATE,
         allowNull: false
+    },
+    likes: {
+        type: DataTypes.INTEGER,
+    },
+    img: {
+        type: DataTypes.STRING,
     }
 });
 

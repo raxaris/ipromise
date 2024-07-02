@@ -1,11 +1,11 @@
 const {User, Role, ResetToken} = require("../model/models");
 const { Op } = require("sequelize");
-const ApiError = require('../error/apiError');
+const ApiError = require('../utils/error/apiError');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
-const sendResetEmail = require('../mailer/mailer');
+const sendResetEmail = require('../utils/mailer/mailer');
 
 class AuthController {
     async registration(req, res, next) {
@@ -47,7 +47,7 @@ class AuthController {
                 maxAge: 86400000,
                 httpOnly: true,
             });
-            return res.status(200).json({token});
+            return res.status(200).json({ token: token, user: user });
 
         } catch (e) {
             next(ApiError.badRequest("Registering error"))
@@ -84,7 +84,7 @@ class AuthController {
                 maxAge: 86400000,
                 httpOnly: true,
             });
-            return res.status(200).json({token});
+            return res.status(200).json({ token: token, user: user });
         } catch (e) {
             next(ApiError.internal("Logging in error"))
         }
@@ -126,11 +126,37 @@ class AuthController {
 
     async resetPassword(req, res, next) {
         try {
-
+            
             res.status(200).json({ message: 'Password reset link sent to your email' });
         } catch (error) {
             next(ApiError.internal("Resetting error"))
         }
+    }
+
+    async googleCallback(req, res, next){
+        try{
+            const user = req.user;
+            const token = generateJWT(user.id, user.username, user.email, await getRoleName(user.roleId))
+            res.cookie('jwt', token, {maxAge: 86400000, httpOnly: true});
+            res.redirect('/api/dashboard');
+        } catch (e) {
+            next(ApiError.internal("Callback error"))
+        }
+    }
+
+    async facebookCallback(req, res, next){
+        try{
+            const user = req.user;
+            const token = generateJWT(user.id, user.username, user.email, await getRoleName(user.roleId))
+            res.cookie('jwt', token, {maxAge: 86400000, httpOnly: true});
+            res.redirect('/api/dashboard');
+        } catch (e) {
+            next(ApiError.internal("Callback error"))
+        }
+    }
+
+    async logout(req, res, next){
+
     }
 }
 

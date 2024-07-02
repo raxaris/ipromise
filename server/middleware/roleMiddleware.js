@@ -1,34 +1,31 @@
 const jwt = require("jsonwebtoken");
 const secret = process.env.SECRET_KEY;
-const ApiError = require("../error/apiError");
+const ApiError = require("../utils/error/apiError");
+
 module.exports = function (roles) {
-    return function(req, res, next){
-        if (req.method === "OPTIONS"){
-            next();
+    return function(req, res, next) {
+        if (req.method === "OPTIONS") {
+            return next();
         }
 
-        try{
-            const token = req.session.token;
-            if(!token){
-                return next(ApiError.badRequest("Invalid token"))
+        try {
+            const token = req.cookies.jwt
+            if (!token) {
+                return next(ApiError.badRequest("Invalid token"));
             }
 
-            const {roles: userRoles} = jwt.verify(token, secret);
+            const decodedData = jwt.verify(token, secret);
+            const userRole = decodedData.role;
 
-            let hasRole = false
-            userRoles.forEach(role => {
-                if(roles.includes(role)){
-                    hasRole = true;
-                }
-            });
-
-            if(!hasRole){
-                return next(ApiError.forbidden("Not enough privileges"))
+            if (!roles.includes(userRole)) {
+                return next(ApiError.forbidden("Not enough privileges"));
             }
+
+            req.user = decodedData;
             next();
-        } catch (e){
+        } catch (e) {
             console.log(e);
-            return res.status(403).json({status: "error", message: "Unauthorized"});
+            next(ApiError.internal("Error getting user role"));
         }
-    }
-}
+    };
+};

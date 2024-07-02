@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const ApiError = require("../utils/error/apiError");
 
 module.exports = (req, res, next) => {
     if(req.method === 'OPTIONS') {
@@ -14,6 +15,6 @@ module.exports = (req, res, next) => {
         req.user = decodedData
         next();
     } catch (e){
-        return res.status(401).json({message: "Unauthorized"})
+        next(ApiError.internal("Error while authenticating"));
     }
 }
