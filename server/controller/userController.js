@@ -66,7 +66,7 @@ class UserController {
         const { id } = req.params;
         const { username, email, roleId } = req.body;
         try {
-            const user = await User.findOne({ where: { id } });
+            const user = await User.findByPk(id);
             if (!user) {
                 return next(ApiError.badRequest("User with this id does not exist"))
             }
@@ -99,7 +99,7 @@ class UserController {
             return next(ApiError.badRequest("User ID is required"));
         }
         try {
-            const user = await User.findOne({ where: { id } });
+            const user = await User.findByPk(id);
             if (!user) {
                 return next(ApiError.notFound("User not found"));
             }
@@ -111,6 +111,18 @@ class UserController {
         }
     }
 
+    async getUserProfile(req, res, next){
+        const {id} = req.params;
+        if (!id) {
+            return next(ApiError.badRequest("User ID is required"));
+        }
+        try {
+            const user = await User.findByPk(id);
+
+        } catch(e) {
+            next(ApiError.internal("Error getting user profile"))
+        }
+    }
 }
 
 module.exports = new UserController();

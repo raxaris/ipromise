@@ -79,9 +79,6 @@ const Promise = sequelize.define('promise', {
         type: DataTypes.DATE,
         allowNull: false
     },
-    likes: {
-        type: DataTypes.INTEGER,
-    },
     img: {
         type: DataTypes.STRING,
     }
@@ -120,14 +117,6 @@ const Follower = sequelize.define('follower', {
     }
 });
 
-const Friend = sequelize.define('friend', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    }
-
-});
 
 const ResetToken = sequelize.define('reset_token', {
     id: {
@@ -146,6 +135,13 @@ const ResetToken = sequelize.define('reset_token', {
     },
 });
 
+const Like = sequelize.define('like', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    }
+});
 
 User.belongsTo(Role);
 Role.hasMany(User);
@@ -162,11 +158,13 @@ Notification.belongsTo(User);
 Follower.belongsTo(User);
 Follower.belongsTo(Promise);
 
-Friend.belongsTo(User);
-Friend.belongsTo(User, { as: 'friend', through: Friend});
-
 ResetToken.belongsTo(User);
 User.hasOne(ResetToken);
+
+Like.belongsTo(User);
+Like.belongsTo(Promise);
+Promise.hasMany(Like);
+User.hasMany(Like);
 
 module.exports = {
     User,
@@ -175,6 +173,6 @@ module.exports = {
     Comment,
     Notification,
     Follower,
-    Friend,
-    ResetToken
+    ResetToken,
+    Like
 };

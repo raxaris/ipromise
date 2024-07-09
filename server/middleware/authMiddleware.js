@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
         next()
     }
     try{
-        const token = req.session.token;
+        const token = req.cookies.jwt;
         if(!token){
             return res.status(403).json({status: "error", message: "Unauthorized"});
         }

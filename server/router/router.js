@@ -3,6 +3,7 @@ const router = Router()
 const promiseRouter = require('./promiseRouter')
 const authRouter = require('./authRouter')
 const adminRouter = require('./adminRouter')
+const profileRouter = require('./profileRouter')
 const jwt = require('jsonwebtoken')
 const path = require("node:path");
 const cookieParser = require("cookie-parser");
@@ -10,6 +11,7 @@ const cookieParser = require("cookie-parser");
 router.use('/auth', authRouter)
 router.use('/promise', promiseRouter)
 router.use('/admin', adminRouter)
+router.use('/profile', profileRouter)
 
 router.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', '..', 'client', 'form.html'));
