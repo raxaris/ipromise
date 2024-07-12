@@ -48,8 +48,8 @@ class AuthController {
                 httpOnly: true,
             });
             return res.status(200).json({ token: token, user: user });
-
         } catch (e) {
+            console.log(e)
             next(ApiError.badRequest("Registering error"))
         }
     }

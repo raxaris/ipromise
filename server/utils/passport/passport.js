@@ -9,8 +9,7 @@ passport.use(new GoogleStrategy({
     callbackURL: '/api/auth/google/callback'
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        console.log(profile)
-        let user = await User.findOne({ where: { oauthProvider: "google", oauthId: profile.id } });
+        let user = await User.findOne({ where: { googleId: profile.id } });
         if (!user) {
             user = await User.create({
                 username: normalizeString(profile.displayName),
@@ -37,7 +36,6 @@ passport.use(new FacebookStrategy({
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         let user = await User.findOne({ where: { facebookId: profile.id } });
-        console.log(profile)
         if (!user) {
             user = await User.create({
                 username: normalizeString(profile.displayName),

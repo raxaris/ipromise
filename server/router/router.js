@@ -9,9 +9,9 @@ const path = require("node:path");
 const cookieParser = require("cookie-parser");
 
 router.use('/auth', authRouter)
-router.use('/promise', promiseRouter)
+router.use('/promises', promiseRouter)
 router.use('/admin', adminRouter)
-router.use('/profile', profileRouter)
+router.use('/profiles', profileRouter)
 
 router.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '..', '..', 'client', 'form.html'));

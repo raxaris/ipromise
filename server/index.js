@@ -9,7 +9,7 @@ const session = require('express-session')
 
 const sequelize = require('./db')
 const router = require('./router/router')
-const passport = require('./utils/passport/passport');
+const passport = require('./utils/passport/passport')
 const errorHandler = require('./middleware/errorHandlingMiddleware')
 
 const PORT = process.env.PORT || 5000
@@ -42,13 +42,12 @@ passport.deserializeUser(function(user, done) {
 });
 
 app.use("/api", router)
-// app.use(errorHandler)
+app.use(errorHandler)
 
 const start = async () => {
     try{
         await sequelize.authenticate()
         await sequelize.sync({alter: true})
-
         app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
     } catch (e) {
         console.log(e)

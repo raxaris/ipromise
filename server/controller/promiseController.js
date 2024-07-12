@@ -1,6 +1,5 @@
-const {Promise} = require("../model/models")
+const {Promise, User} = require("../model/models")
 const {ApiError} = require("../utils/error/apiError")
-
 class PromiseController{
     async createPromise(req, res, next) {
         try{
@@ -16,33 +15,31 @@ class PromiseController{
         try {
             let {userId, limit, page, sorting} = req.query
             page = page || 1
-            limit = limit || 10
             sorting = sorting || "ASC"
-
+            // limit = limit || 10
             if (sorting !== "ASC" && sorting !== "DESC") {
                 next(ApiError.badRequest("Invalid sorting type"))
                 return
             }
-
             let offset = page * limit - limit
-
             let promises
             if (!userId) {
-                promises = await Promise.findAndCountAll({order: [['createdAt', sorting]], limit, offset})
+                promises = await Promise.findAll({order: [['createdAt', sorting]], limit, offset, include: [{ model: User, attributes: ['username'] }]})
             } else {
-                promises = await Promise.findAndCountAll({where: {userId}, limit, offset})
+                promises = await Promise.findAll({where: {userId}, limit, offset, include: [{ model: User, attributes: ['username'] }]})
             }
 
             return res.json(promises)
         } catch (e) {
-            next(ApiError.internal("Error getting promises"))
+            console.log("Api Error", ApiError)
+            next(ApiError.unauthorized())
         }
     }
 
     async getPromiseByID(req, res, next) {
         try {
             const { id } = req.params;
-            const promise = await Promise.findByPk(id);
+            const promise = await Promise.findByPk(id, {include: [{ model: User, attributes: ['username'] }]});
 
             if (!promise) {
                 return next(ApiError.notFound("Promise not found"));
