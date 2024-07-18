@@ -1,5 +1,5 @@
 const {Promise, User} = require("../model/models")
-const {ApiError} = require("../utils/error/apiError")
+const ApiError = require("../utils/error/apiError")
 class PromiseController{
     async createPromise(req, res, next) {
         try{

@@ -1,5 +1,5 @@
 const {Comment} = require("../model/models")
-const {ApiError} = require("../utils/error/apiError")
+const ApiError = require("../utils/error/apiError")
 
 class CommentController{
     async createComment(req, res, next) {
