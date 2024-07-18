@@ -3,18 +3,56 @@
 </script>
 
 <template>
-  <div class="navbar">
-    <div @click="$router.push('/')" style="cursor: pointer; font-size: 20px"><img src="@/assets/img/logo.png" alt="iPromise"></div>
-    <div class="navbar__btns">
-      <my-button @click="$router.push('/promises')">Promises</my-button>
-      <my-button @click="$router.push('/about')" style="margin-left: 20px;">About</my-button>
-      <my-button @click="$router.push('/store')" style="margin-left: 20px;">Vuex</my-button>
-      <my-button @click="$router.push('/composition')" style="margin-left: 20px;">Composition</my-button>
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <div class="container-fluid">
+      <div @click="$router.push('/')" class="navbar-brand">
+        <img class="logo" src="@/assets/img/logo-white.png" alt="iPromise"></div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-container collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <div class="nav-link">Личное</div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link">Политическое</div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link">Служба поддежки</div>
+          </li>
+          <li class="nav-item">
+            <div class="nav-link">FAQ</div>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item d-none d-lg-block">
+            <div class="nav-link">
+              <font-awesome-icon icon="fa-solid fa-circle-user" />
+            </div>
+          </li>
+          <li class="nav-item d-none d-lg-block">
+            <div class="nav-link">
+              <font-awesome-icon icon="arrow-right-from-bracket" />
+            </div>
+          </li>
+          <!-- Надписи для коллапса -->
+          <li class="nav-item d-lg-none">
+            <a class="nav-link" @click="$router.push('/profile')">Profile</a>
+          </li>
+          <li class="nav-item d-lg-none">
+            <a class="nav-link" @click="$router.push('/logout')">Logout</a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
+  </nav>
 </template>
 
 <style scoped>
+
 .navbar{
   height: 8vh;
   background-color: #226F54;
@@ -24,7 +62,15 @@
   color: white;
 }
 
-.navbar__btns{
-  margin-left: auto;
+.logo{
+  height: 4vh;
+}
+
+.nav-link{
+  color: white;
+}
+
+.navbar-container{
+  background-color: #226F54;
 }
 </style>

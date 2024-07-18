@@ -21,7 +21,7 @@ footer {
   display: flex;
   background-color: #226F54;
   width: 100%;
-  height: 10vh;
+  height: 8vh;
   align-items: center;
 }
 
