@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  $END$
+Register
 </template>
 
 <style scoped>

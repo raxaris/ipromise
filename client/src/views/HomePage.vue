@@ -1,9 +1,8 @@
 <script setup lang="ts">
-
 </script>
 
 <template>
-  $END$
+HomePage
 </template>
 
 <style scoped>

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  $END$
+Login
 </template>
 
 <style scoped>
