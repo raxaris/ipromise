@@ -1,6 +1,6 @@
 <template>
   <PageNavbar/>
-  <div class="app-container">
+  <div class="app-container container-fluid d-flex justify-content-center align-items-center">
     <router-view></router-view>
   </div>
   <PageFooter/>
@@ -17,8 +17,10 @@
 }
 
 .app-container{
+  background-color: #d9edbf;
+  margin-top: 7vh;
   padding: 20px;
-  min-height: 100vh;
+  min-height: 86vh;
 }
 </style>
 <script setup lang="ts">

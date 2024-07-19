@@ -16,6 +16,18 @@ const routes = [
     path: '/login',
     component: LoginPage
   },
+  {
+    path: '/faq',
+    component: HomePage
+  },
+  {
+    path: '/political',
+    component: HomePage
+  },
+  {
+    path: '/feed',
+    component: HomePage
+  },
 ]
 
 const router = createRouter({
